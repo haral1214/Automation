@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoFlow Pro | No-Code Automation Expert</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dim: #8B6914;
+    --black: #080808;
+    --dark: #0E0E0E;
+    --dark2: #141414;
+    --dark3: #1A1A1A;
+    --white: #F5F0E8;
+    --white-dim: #A89F8C;
+    --accent: #1E3A2F;
+    --accent2: #2D5240;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 32px; height: 32px;
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.15s ease;
+  }
+
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9997;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 24px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(8,8,8,0.95), transparent);
+    backdrop-filter: blur(2px);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--white-dim);
+    text-decoration: none;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0 60px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(30,58,47,0.3) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 20% 80%, rgba(201,168,76,0.06) 0%, transparent 60%);
+  }
+
+  .hero-lines {
+    position: absolute;
+    right: 0; top: 0;
+    width: 45%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+    opacity: 0.06;
+  }
+
+  .hero-line {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 28px 0;
+    animation: lineSlide 4s ease infinite alternate;
+  }
+
+  .hero-line:nth-child(2) { animation-delay: 0.5s; width: 80%; }
+  .hero-line:nth-child(3) { animation-delay: 1s; width: 60%; }
+  .hero-line:nth-child(4) { animation-delay: 1.5s; }
+  .hero-line:nth-child(5) { animation-delay: 2s; width: 90%; }
+
+  @keyframes lineSlide {
+    from { opacity: 0.3; transform: scaleX(0.8); }
+    to { opacity: 1; transform: scaleX(1); }
+  }
+
+  .hero-content {
+    max-width: 700px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .hero-h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 7vw, 96px);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: -1px;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+
+  .hero-h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--white-dim);
+    line-height: 1.7;
+    max-width: 480px;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--black);
+    padding: 16px 40px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none;
+    cursor: none;
+    text-decoration: none;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--black);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .btn-primary:hover::before { transform: translateX(0); }
+  .btn-primary:hover { color: var(--gold); }
+  .btn-primary span { position: relative; z-index: 1; }
+
+  .btn-outline {
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold);
+    padding: 16px 40px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.05);
+  }
+
+  .hero-stats {
+    position: absolute;
+    right: 60px;
+    bottom: 80px;
+    display: flex;
+    gap: 50px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1s forwards;
+  }
+
+  .stat { text-align: center; }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1;
+    display: block;
+  }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--white-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  /* SCROLL INDICATOR */
+  .scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 60px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--white-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.2s forwards;
+  }
+
+  .scroll-hint::after {
+    content: '';
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--gold-dim), transparent);
+    animation: scrollLine 2s ease infinite;
+  }
+
+  @keyframes scrollLine {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTION STYLES */
+  section {
+    padding: 120px 60px;
+    position: relative;
+  }
+
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-tag::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 60px;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  /* DIVIDER */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(201,168,76,0.2), transparent);
+  }
+
+  /* TOOLS SECTION */
+  .tools {
+    background: var(--dark);
+  }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+  }
+
+  .tool-card {
+    background: var(--dark2);
+    padding: 40px 30px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    border-bottom: 2px solid transparent;
+  }
+
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+
+  .tool-card:hover {
+    background: var(--dark3);
+    transform: translateY(-4px);
+  }
+
+  .tool-card:hover::before { transform: scaleX(1); }
+
+  .tool-icon {
+    font-size: 36px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .tool-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .tool-desc {
+    font-size: 12px;
+    color: var(--white-dim);
+    line-height: 1.5;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .service-card {
+    background: var(--dark2);
+    padding: 50px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+  }
+
+  .service-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 0;
+    background: var(--gold);
+    transition: height 0.4s ease;
+  }
+
+  .service-card:hover::after { height: 100%; }
+  .service-card:hover { background: var(--dark3); }
+
+  .service-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--gold-dim);
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+
+  .service-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .service-desc {
+    font-size: 14px;
+    color: var(--white-dim);
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+
+  .service-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    padding: 5px 12px;
+    border: 1px solid rgba(201,168,76,0.25);
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  /* CLIENTS */
+  .clients { background: var(--dark); }
+
+  .clients-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .client-card {
+    background: var(--dark2);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+  }
+
+  .client-card:hover { background: var(--dark3); }
+
+  .client-logo-area {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+  }
+
+  .client-initials {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: 1px solid rgba(201,168,76,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .client-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: var(--white);
+  }
+
+  .client-type {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  .client-result {
+    font-size: 13px;
+    color: var(--white-dim);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .client-metric {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .client-metric-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--white-dim);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* WORK */
+  .work-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+
+  .work-grid-2 {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 2px;
+  }
+
+  .work-card {
+    background: var(--dark2);
+    padding: 50px;
+    position: relative;
+    overflow: hidden;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    transition: all 0.4s;
+  }
+
+  .work-card-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 140px;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .work-card:hover { background: var(--dark3); }
+
+  .work-card-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .work-card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .work-card-desc {
+    font-size: 13px;
+    color: var(--white-dim);
+    line-height: 1.7;
+  }
+
+  /* PRICING */
+  .pricing { background: var(--dark); }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .pricing-card {
+    background: var(--dark2);
+    padding: 50px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+  }
+
+  .pricing-card.featured {
+    background: var(--accent);
+    border: 1px solid rgba(201,168,76,0.3);
+  }
+
+  .pricing-card.featured::before {
+    content: 'MOST POPULAR';
+    position: absolute;
+    top: 0; right: 0;
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 6px 16px;
+  }
+
+  .pricing-tier {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .pricing-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .pricing-price span {
+    font-size: 20px;
+    color: var(--white-dim);
+    vertical-align: super;
+  }
+
+  .pricing-period {
+    font-size: 12px;
+    color: var(--white-dim);
+    margin-bottom: 32px;
+  }
+
+  .pricing-divider {
+    height: 1px;
+    background: rgba(201,168,76,0.15);
+    margin-bottom: 32px;
+  }
+
+  .pricing-features {
+    list-style: none;
+    margin-bottom: 40px;
+  }
+
+  .pricing-features li {
+    font-size: 13px;
+    color: var(--white-dim);
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    line-height: 1.5;
+  }
+
+  .pricing-features li::before {
+    content: '◆';
+    color: var(--gold);
+    font-size: 7px;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .pricing-card:hover { transform: translateY(-4px); }
+
+  /* TESTIMONIALS */
+  .testi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+  }
+
+  .testi-card {
+    background: var(--dark2);
+    padding: 40px;
+  }
+
+  .testi-stars {
+    color: var(--gold);
+    font-size: 14px;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+  }
+
+  .testi-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: var(--white);
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+
+  .testi-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .testi-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: 1px solid rgba(201,168,76,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .testi-name {
+    font-size: 14px;
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .testi-role {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--gold-dim);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* PROCESS */
+  .process {
+    background: var(--dark);
+  }
+
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+
+  .process-step {
+    background: var(--dark2);
+    padding: 40px 30px;
+    position: relative;
+  }
+
+  .process-step::after {
+    content: '→';
+    position: absolute;
+    right: -16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold-dim);
+    font-size: 20px;
+    z-index: 2;
+  }
+
+  .process-step:last-child::after { display: none; }
+
+  .step-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 60px;
+    font-weight: 300;
+    color: rgba(201,168,76,0.12);
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+
+  .step-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .step-desc {
+    font-size: 13px;
+    color: var(--white-dim);
+    line-height: 1.7;
+  }
+
+  /* CTA SECTION */
+  .cta-section {
+    text-align: center;
+    padding: 140px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(30,58,47,0.4), transparent);
+  }
+
+  .cta-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 6vw, 80px);
+    font-weight: 300;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .cta-section p {
+    font-size: 16px;
+    color: var(--white-dim);
+    margin-bottom: 48px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    line-height: 1.8;
+  }
+
+  .cta-btns {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark2);
+    padding: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .footer-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--white-dim);
+    text-decoration: none;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .footer-links a:hover { color: var(--gold); }
+
+  .footer-copy {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--white-dim);
+    letter-spacing: 1px;
+  }
+
+  /* FLOATING GOLD ORB */
+  .gold-orb {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(201,168,76,0.08), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: orbFloat 8s ease-in-out infinite;
+  }
+
+  @keyframes orbFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+  }
+
+  /* REVEAL ANIMATION */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* CONTACT FORM */
+  .contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .form-group {
+    margin-bottom: 24px;
+  }
+
+  .form-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: var(--dark2);
+    border: 1px solid rgba(201,168,76,0.15);
+    color: var(--white);
+    padding: 16px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+    cursor: none;
+  }
+
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: rgba(201,168,76,0.5);
+  }
+
+  .form-textarea { height: 120px; resize: none; }
+
+  .form-select option { background: var(--dark2); }
+
+  /* WHATSAPP FLOATING BUTTON */
+  .wa-float {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .wa-btn {
+    width: 60px;
+    height: 60px;
+    background: #25D366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 24px rgba(37,211,102,0.4);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    animation: waPulse 2.5s ease infinite;
+  }
+
+  .wa-btn:hover {
+    transform: scale(1.12);
+    box-shadow: 0 6px 32px rgba(37,211,102,0.6);
+  }
+
+  .wa-btn svg { width: 30px; height: 30px; fill: white; }
+
+  .wa-tooltip {
+    background: var(--dark2);
+    border: 1px solid rgba(37,211,102,0.3);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 10px 16px;
+    white-space: nowrap;
+    border-radius: 2px;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+
+  .wa-float:hover .wa-tooltip {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  @keyframes waPulse {
+    0%, 100% { box-shadow: 0 4px 24px rgba(37,211,102,0.4); }
+    50% { box-shadow: 0 4px 40px rgba(37,211,102,0.7), 0 0 0 8px rgba(37,211,102,0.1); }
+  }
+
+  /* CONTACT INFO ITEMS */
+  .contact-info-bar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+  }
+
+  .contact-info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--white-dim);
+    font-size: 14px;
+    transition: color 0.3s;
+    border: 1px solid rgba(201,168,76,0.1);
+    padding: 14px 24px;
+    background: var(--dark2);
+  }
+
+  .contact-info-item:hover { color: var(--gold); border-color: rgba(201,168,76,0.4); }
+
+  .contact-info-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .contact-info-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--gold-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  /* ===== HAMBURGER MENU ===== */
+  .form-name-phone-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 767px) {
+    .form-name-phone-grid { grid-template-columns: 1fr; }
+  }
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    z-index: 200;
+  }
+  .hamburger span {
+    display: block;
+    width: 26px;
+    height: 2px;
+    background: var(--gold);
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ===== TV / LARGE SCREENS (1800px+) ===== */
+  @media (min-width: 1800px) {
+    nav { padding: 28px 100px; }
+    .hero { padding: 0 100px; }
+    .hero-content { max-width: 900px; }
+    section { padding: 140px 100px; }
+    .hero-stats { right: 100px; }
+    .scroll-hint { left: 100px; }
+    footer { padding: 70px 100px; }
+    .tools-grid { grid-template-columns: repeat(5, 1fr); }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    .clients-grid { grid-template-columns: repeat(3, 1fr); }
+    .pricing-grid { grid-template-columns: repeat(3, 1fr); }
+    .testi-grid { grid-template-columns: repeat(3, 1fr); }
+    .process-steps { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  /* ===== LAPTOP / DESKTOP (1024px–1399px) ===== */
+  @media (max-width: 1399px) {
+    nav { padding: 20px 40px; }
+    .hero { padding: 0 40px; }
+    .hero-stats { right: 40px; bottom: 60px; gap: 36px; }
+    section { padding: 100px 40px; }
+    footer { padding: 50px 40px; }
+    .scroll-hint { left: 40px; }
+    .cta-section { padding: 100px 40px; }
+  }
+
+  /* ===== TABLET (768px–1023px) ===== */
+  @media (max-width: 1023px) {
+    /* Nav */
+    nav { padding: 18px 30px; }
+    .hamburger { display: flex; }
+    .nav-links {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: rgba(8,8,8,0.98);
+      backdrop-filter: blur(20px);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      gap: 36px;
+      z-index: 150;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a { font-size: 14px; letter-spacing: 3px; }
+
+    /* Hero */
+    .hero {
+      padding: 100px 30px 80px;
+      min-height: auto;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .hero-lines { display: none; }
+    .hero-stats {
+      position: relative;
+      right: auto; bottom: auto;
+      display: flex;
+      gap: 30px;
+      margin-top: 48px;
+      animation: fadeUp 0.8s ease 1s forwards;
+    }
+    .stat-num { font-size: 36px; }
+    .scroll-hint { display: none; }
+
+    /* Sections */
+    section { padding: 80px 30px; }
+    .cta-section { padding: 80px 30px; }
+
+    /* Grids */
+    .tools-grid { grid-template-columns: repeat(3, 1fr); }
+    .services-grid { grid-template-columns: 1fr; }
+    .clients-grid { grid-template-columns: repeat(2, 1fr); }
+    .work-grid,
+    .work-grid-2 { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+    .testi-grid { grid-template-columns: 1fr 1fr; }
+    .process-steps { grid-template-columns: repeat(2, 1fr); }
+
+    /* Contact form */
+    .contact-info-bar { gap: 16px; }
+    .contact-form > div[style*="grid"] {
+      grid-template-columns: 1fr !important;
+    }
+
+    /* Footer */
+    footer {
+      flex-direction: column;
+      gap: 24px;
+      text-align: center;
+      padding: 40px 30px;
+    }
+    .footer-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
+
+    /* Process arrows */
+    .process-step::after { display: none; }
+
+    /* Service/work card padding */
+    .service-card { padding: 36px; }
+    .work-card { min-height: 260px; padding: 36px; }
+  }
+
+  /* ===== MOBILE (max 767px) ===== */
+  @media (max-width: 767px) {
+    /* Nav */
+    nav { padding: 16px 20px; }
+    .nav-logo { font-size: 18px; }
+
+    /* Hero */
+    .hero { padding: 90px 20px 60px; }
+    .hero-h1 { font-size: clamp(40px, 11vw, 64px); }
+    .hero-sub { font-size: 14px; }
+    .hero-cta { flex-direction: column; align-items: flex-start; gap: 14px; }
+    .btn-primary, .btn-outline { padding: 14px 28px; font-size: 10px; }
+    .hero-stats { gap: 20px; flex-wrap: wrap; }
+    .stat-num { font-size: 32px; }
+
+    /* Sections */
+    section { padding: 60px 20px; }
+    .cta-section { padding: 60px 20px; }
+    .section-title { margin-bottom: 36px; }
+
+    /* Grids — all single column */
+    .tools-grid { grid-template-columns: repeat(2, 1fr); gap: 2px; }
+    .services-grid,
+    .clients-grid,
+    .work-grid,
+    .work-grid-2,
+    .pricing-grid,
+    .testi-grid,
+    .process-steps { grid-template-columns: 1fr; }
+
+    /* Cards */
+    .tool-card { padding: 28px 20px; }
+    .tool-icon { font-size: 28px; }
+    .service-card { padding: 28px 24px; }
+    .client-card { padding: 28px 24px; }
+    .work-card { min-height: 220px; padding: 28px 24px; }
+    .pricing-card { padding: 36px 28px; }
+    .testi-card { padding: 28px 24px; }
+    .process-step { padding: 28px 24px; }
+
+    /* Contact */
+    .contact-info-bar { flex-direction: column; gap: 10px; }
+    .contact-info-item { width: 100%; justify-content: flex-start; }
+    .contact-form > div[style*="grid"] {
+      grid-template-columns: 1fr !important;
+      display: block !important;
+    }
+    .contact-form > div[style*="grid"] .form-group { margin-bottom: 24px; }
+
+    /* Footer */
+    footer {
+      flex-direction: column;
+      gap: 20px;
+      text-align: center;
+      padding: 36px 20px;
+    }
+    .footer-links {
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    /* WhatsApp button */
+    .wa-float { bottom: 20px; right: 20px; }
+    .wa-btn { width: 52px; height: 52px; }
+    .wa-btn svg { width: 24px; height: 24px; }
+
+    /* CTA buttons */
+    .cta-btns { flex-direction: column; align-items: center; }
+
+    /* Pricing featured badge */
+    .pricing-card.featured::before { font-size: 8px; padding: 5px 12px; }
+  }
+
+  /* ===== SMALL MOBILE (max 400px) ===== */
+  @media (max-width: 400px) {
+    .tools-grid { grid-template-columns: 1fr; }
+    .hero-h1 { font-size: 38px; }
+    .pricing-price { font-size: 44px; }
+  }
+
+  /* ===== Fix cursor on touch devices ===== */
+  @media (hover: none) {
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+    .btn-primary, .form-input, .form-select, .form-textarea { cursor: pointer; }
+    * { cursor: auto; }
+    .btn-primary, .btn-outline, a, button, .tool-card, .service-card { cursor: pointer; }
+  }
+</style>
+</head>
+<body>
+
+<!-- WHATSAPP FLOAT -->
+<div class="wa-float">
+  <div class="wa-tooltip">💬 Chat on WhatsApp</div>
+  <a class="wa-btn" href="https://wa.me/923296816125?text=Hi%20Hassan!%20I%20visited%20your%20portfolio%20and%20I'm%20interested%20in%20automation%20for%20my%20real%20estate%20business." target="_blank" title="Chat on WhatsApp">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  </a>
+</div>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">AutoFlow<span style="color:var(--white-dim);">Pro</span></div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#services" onclick="closeMenu()">Services</a></li>
+    <li><a href="#work" onclick="closeMenu()">Work</a></li>
+    <li><a href="#clients" onclick="closeMenu()">Clients</a></li>
+    <li><a href="#pricing" onclick="closeMenu()">Pricing</a></li>
+    <li><a href="#contact" onclick="closeMenu()">Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lines">
+    <div class="hero-line"></div>
+    <div class="hero-line"></div>
+    <div class="hero-line"></div>
+    <div class="hero-line"></div>
+    <div class="hero-line"></div>
+    <div class="hero-line"></div>
+    <div class="hero-line"></div>
+    <div class="hero-line"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-tag">No-Code Automation Specialist</div>
+    <h1 class="hero-h1">
+      Automate Your<br>
+      Real Estate<br>
+      <em>Empire.</em>
+    </h1>
+    <p class="hero-sub">
+      I build intelligent automation systems for real estate professionals — turning manual workflows into seamless, revenue-generating machines using Make.com, GoHighLevel, n8n & Zapier.
+    </p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn-primary"><span>Book a Strategy Call</span></a>
+      <a href="#work" class="btn-outline">View My Work</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-num">50+</span>
+      <div class="stat-label">Automations Built</div>
+    </div>
+    <div class="stat">
+      <span class="stat-num">30+</span>
+      <div class="stat-label">RE Clients</div>
+    </div>
+    <div class="stat">
+      <span class="stat-num">10x</span>
+      <div class="stat-label">Avg Efficiency Gain</div>
+    </div>
+  </div>
+  <div class="scroll-hint">Scroll</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TOOLS -->
+<section class="tools" id="tools">
+  <div class="section-tag">Tech Stack</div>
+  <h2 class="section-title">Mastered <em>Platforms</em></h2>
+  <div class="tools-grid reveal">
+    <div class="tool-card">
+      <span class="tool-icon">⚡</span>
+      <div class="tool-name">Make.com</div>
+      <div class="tool-desc">Complex multi-step automations with advanced logic & data routing</div>
+    </div>
+    <div class="tool-card">
+      <span class="tool-icon">🏠</span>
+      <div class="tool-name">GoHighLevel</div>
+      <div class="tool-desc">Complete CRM setup, funnels, pipelines & automated follow-up sequences</div>
+    </div>
+    <div class="tool-card">
+      <span class="tool-icon">⚙️</span>
+      <div class="tool-name">n8n</div>
+      <div class="tool-desc">Self-hosted powerful workflows for custom enterprise-grade solutions</div>
+    </div>
+    <div class="tool-card">
+      <span class="tool-icon">🔗</span>
+      <div class="tool-name">Zapier</div>
+      <div class="tool-desc">Rapid app integrations connecting hundreds of platforms seamlessly</div>
+    </div>
+    <div class="tool-card">
+      <span class="tool-icon">🤖</span>
+      <div class="tool-name">AI + APIs</div>
+      <div class="tool-desc">OpenAI, webhooks & custom APIs woven into automation flows</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SERVICES -->
+<section id="services" style="background: var(--black);">
+  <div class="section-tag">What I Do</div>
+  <h2 class="section-title">Real Estate <em>Automation</em><br>Services</h2>
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <div class="service-name">Lead Capture & Nurture Automation</div>
+      <div class="service-desc">Never let a lead go cold again. I build fully automated lead capture systems from your website, Facebook Ads, and property portals — with instant SMS/email follow-ups that feel personal, not robotic.</div>
+      <div class="service-tags">
+        <span class="tag">GHL Funnels</span>
+        <span class="tag">Make.com</span>
+        <span class="tag">SMS Sequences</span>
+        <span class="tag">Email Flows</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <div class="service-name">CRM Pipeline & Deal Flow Setup</div>
+      <div class="service-desc">Custom GoHighLevel CRM built specifically for real estate. Automated deal stages, task assignments, reminders, and agent performance dashboards — all in one place.</div>
+      <div class="service-tags">
+        <span class="tag">GoHighLevel</span>
+        <span class="tag">Pipeline</span>
+        <span class="tag">Reporting</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <div class="service-name">Property Listing Automation</div>
+      <div class="service-desc">Auto-publish listings across multiple portals (Zameen, Bayut, social media) with one click. Integrated with WhatsApp alerts when inquiries arrive — so your agents respond in seconds.</div>
+      <div class="service-tags">
+        <span class="tag">Zapier</span>
+        <span class="tag">WhatsApp API</span>
+        <span class="tag">Multi-portal</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <div class="service-name">AI-Powered Follow-Up Systems</div>
+      <div class="service-desc">Deploy GPT-powered chatbots and AI follow-up sequences that qualify leads 24/7, book viewings automatically, and route hot prospects directly to your top agents.</div>
+      <div class="service-tags">
+        <span class="tag">n8n</span>
+        <span class="tag">OpenAI</span>
+        <span class="tag">Chatbot</span>
+        <span class="tag">Calendar Sync</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <div class="service-name">Reporting & Analytics Dashboards</div>
+      <div class="service-desc">Automated weekly/monthly reports sent to your inbox. Know your best lead sources, agent conversion rates, and revenue pipeline without lifting a finger.</div>
+      <div class="service-tags">
+        <span class="tag">Make.com</span>
+        <span class="tag">Google Sheets</span>
+        <span class="tag">Dashboards</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <div class="service-name">Full GHL Agency Buildout</div>
+      <div class="service-desc">End-to-end GoHighLevel setup for your real estate agency — branded sub-accounts, white-label portals, agent onboarding automation, and payment collection workflows.</div>
+      <div class="service-tags">
+        <span class="tag">GHL Sub-Accounts</span>
+        <span class="tag">White Label</span>
+        <span class="tag">Payments</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROCESS -->
+<section class="process">
+  <div class="section-tag">How It Works</div>
+  <h2 class="section-title">My <em>Process</em></h2>
+  <div class="process-steps reveal">
+    <div class="process-step">
+      <div class="step-num">01</div>
+      <div class="step-title">Discovery Call</div>
+      <div class="step-desc">We map your current workflow, pain points, and revenue goals. No tech jargon — just clarity on what needs to be automated.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">02</div>
+      <div class="step-title">Custom Blueprint</div>
+      <div class="step-desc">I design a complete automation architecture tailored to your real estate business — before writing a single workflow.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">03</div>
+      <div class="step-title">Build & Test</div>
+      <div class="step-desc">Automation systems are built, stress-tested, and refined until they run perfectly — every trigger, every action, every edge case.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">04</div>
+      <div class="step-title">Launch & Support</div>
+      <div class="step-desc">Go live with full training and 30-day support. Your team gets everything they need to manage and scale the system.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CLIENTS -->
+<section class="clients" id="clients">
+  <div class="section-tag">Previous Clients</div>
+  <h2 class="section-title">Trusted by Real Estate <em>Leaders</em></h2>
+  <div class="clients-grid reveal">
+    <div class="client-card">
+      <div class="client-logo-area">
+        <div class="client-initials">PR</div>
+        <div>
+          <div class="client-name">Prime Realty Group</div>
+          <div class="client-type">Real Estate Agency · Dubai</div>
+        </div>
+      </div>
+      <div class="client-result">Built a complete GHL CRM pipeline with automated WhatsApp lead nurturing. Reduced manual follow-up time by 80% and increased viewing bookings significantly.</div>
+      <span class="client-metric">80%</span>
+      <div class="client-metric-label">Reduction in manual tasks</div>
+    </div>
+    <div class="client-card">
+      <div class="client-logo-area">
+        <div class="client-initials">EP</div>
+        <div>
+          <div class="client-name">Elite Properties Pvt.</div>
+          <div class="client-type">Luxury Developer · Karachi</div>
+        </div>
+      </div>
+      <div class="client-result">Deployed a Make.com automation connecting Facebook Lead Ads → GHL → WhatsApp with AI qualification. Cut lead response time from hours to under 2 minutes.</div>
+      <span class="client-metric">2 min</span>
+      <div class="client-metric-label">Average lead response time</div>
+    </div>
+    <div class="client-card">
+      <div class="client-logo-area">
+        <div class="client-initials">AG</div>
+        <div>
+          <div class="client-name">Al-Ghazi Developers</div>
+          <div class="client-type">Real Estate Developer · Lahore</div>
+        </div>
+      </div>
+      <div class="client-result">Built a multi-portal listing automation pushing to Zameen, Bayut & social media simultaneously. Also automated weekly investor reports sent directly to stakeholders.</div>
+      <span class="client-metric">5x</span>
+      <div class="client-metric-label">Faster listing distribution</div>
+    </div>
+    <div class="client-card">
+      <div class="client-logo-area">
+        <div class="client-initials">SH</div>
+        <div>
+          <div class="client-name">Skyline Homes</div>
+          <div class="client-type">Property Sales · Islamabad</div>
+        </div>
+      </div>
+      <div class="client-result">Created an n8n-powered AI chatbot for their website that qualifies leads 24/7, books appointments on Google Calendar, and notifies agents via Slack in real-time.</div>
+      <span class="client-metric">3x</span>
+      <div class="client-metric-label">More qualified appointments</div>
+    </div>
+    <div class="client-card">
+      <div class="client-logo-area">
+        <div class="client-initials">NP</div>
+        <div>
+          <div class="client-name">Nova Property Hub</div>
+          <div class="client-type">Real Estate Brokerage · Multan</div>
+        </div>
+      </div>
+      <div class="client-result">Full GHL agency setup with white-label portal for their 15 agents. Automated onboarding, commission tracking, and client document collection — saving 40+ hours/month.</div>
+      <span class="client-metric">40+</span>
+      <div class="client-metric-label">Hours saved per month</div>
+    </div>
+    <div class="client-card">
+      <div class="client-logo-area">
+        <div class="client-initials">RE</div>
+        <div>
+          <div class="client-name">Royal Estates</div>
+          <div class="client-type">Luxury Real Estate · Bahria Town</div>
+        </div>
+      </div>
+      <div class="client-result">Complete Zapier + GHL integration connecting their property management software, accounting system, and CRM. Eliminated 100% of manual data entry across departments.</div>
+      <span class="client-metric">100%</span>
+      <div class="client-metric-label">Manual data entry eliminated</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WORK -->
+<section id="work" style="background: var(--black);">
+  <div class="section-tag">Case Studies</div>
+  <h2 class="section-title">Previous <em>Work</em></h2>
+  <div class="work-grid reveal">
+    <div class="work-card">
+      <div class="work-card-bg">⚡</div>
+      <div class="work-card-tag">Make.com + GHL</div>
+      <div class="work-card-title">Facebook Ads to Closed Deal — Full Automation</div>
+      <div class="work-card-desc">End-to-end funnel: Facebook Lead Ad → instant WhatsApp message → GHL pipeline → automated follow-up sequence → agent notification → appointment booking. Zero manual steps.</div>
+    </div>
+    <div class="work-card">
+      <div class="work-card-bg">🏠</div>
+      <div class="work-card-tag">n8n + OpenAI</div>
+      <div class="work-card-title">AI Property Advisor Chatbot</div>
+      <div class="work-card-desc">GPT-4 powered chatbot that asks buyers qualifying questions, recommends matching properties, and books viewings — all on WhatsApp, 24/7.</div>
+    </div>
+  </div>
+  <div class="work-grid-2 reveal">
+    <div class="work-card">
+      <div class="work-card-bg">📊</div>
+      <div class="work-card-tag">Zapier + Google Sheets</div>
+      <div class="work-card-title">Automated Agency Dashboard & Reporting</div>
+      <div class="work-card-desc">Live dashboard tracking leads by source, agent conversions, and monthly revenue — updated automatically every day. Stakeholder reports sent every Monday at 9AM.</div>
+    </div>
+    <div class="work-card">
+      <div class="work-card-bg">🔗</div>
+      <div class="work-card-tag">GHL White Label</div>
+      <div class="work-card-title">Multi-Agent CRM with Commission Tracking</div>
+      <div class="work-card-desc">White-label GHL platform for a 20-agent real estate firm. Automated commission calculations, target tracking, and individual agent performance scorecards.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TESTIMONIALS -->
+<section style="background: var(--dark);">
+  <div class="section-tag">Testimonials</div>
+  <h2 class="section-title">What Clients <em>Say</em></h2>
+  <div class="testi-grid reveal">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"Our lead response time dropped from 3 hours to under 2 minutes. The WhatsApp automation alone has closed us deals we would have otherwise lost."</div>
+      <div class="testi-author">
+        <div class="testi-avatar">AM</div>
+        <div>
+          <div class="testi-name">Ahmed Mirza</div>
+          <div class="testi-role">MD · Prime Realty Group</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"I was skeptical about no-code automation but what was delivered completely changed how our agency operates. We saved 40+ hours a month from day one."</div>
+      <div class="testi-author">
+        <div class="testi-avatar">SR</div>
+        <div>
+          <div class="testi-name">Sara Raza</div>
+          <div class="testi-role">CEO · Nova Property Hub</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"The AI chatbot handles our after-hours inquiries flawlessly. Clients don't even realize they're talking to a bot — and they're booking viewings at midnight!"</div>
+      <div class="testi-author">
+        <div class="testi-avatar">FK</div>
+        <div>
+          <div class="testi-name">Farhan Khalid</div>
+          <div class="testi-role">Director · Skyline Homes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-tag">Investment</div>
+  <h2 class="section-title">Transparent <em>Pricing</em></h2>
+  <div class="pricing-grid reveal">
+    <div class="pricing-card">
+      <div class="pricing-tier">Starter</div>
+      <div class="pricing-price"><span>$</span>497</div>
+      <div class="pricing-period">One-time setup</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>1 Complete Automation Workflow</li>
+        <li>Lead Capture + WhatsApp Notification</li>
+        <li>Basic GHL CRM Setup (1 Pipeline)</li>
+        <li>Facebook Ads Integration</li>
+        <li>7-Day Email Support</li>
+        <li>Video Walkthrough Included</li>
+      </ul>
+      <a href="#contact" class="btn-outline" style="display:block;text-align:center;">Get Started</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-tier">Growth</div>
+      <div class="pricing-price"><span>$</span>1,497</div>
+      <div class="pricing-period">One-time setup</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>Up to 5 Custom Automation Workflows</li>
+        <li>Full GHL CRM + Pipeline Build</li>
+        <li>WhatsApp + Email + SMS Sequences</li>
+        <li>Lead Qualification System</li>
+        <li>Automated Reporting Dashboard</li>
+        <li>Multi-portal Listing Automation</li>
+        <li>30-Day Priority Support</li>
+        <li>1 Strategy Call Included</li>
+      </ul>
+      <a href="#contact" class="btn-primary" style="display:block;text-align:center;"><span>Book Now →</span></a>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-tier">Enterprise</div>
+      <div class="pricing-price" style="font-size:38px;">Custom</div>
+      <div class="pricing-period">Retainer or project-based</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>Unlimited Automation Workflows</li>
+        <li>White-Label GHL Agency Setup</li>
+        <li>AI Chatbot (GPT-Powered)</li>
+        <li>Multi-Agent CRM + Commission Tracking</li>
+        <li>API & Third-party Integrations</li>
+        <li>Custom Dashboards & Analytics</li>
+        <li>Dedicated Monthly Support</li>
+        <li>Priority Builds + Ongoing Optimization</li>
+      </ul>
+      <a href="#contact" class="btn-outline" style="display:block;text-align:center;">Let's Talk</a>
+    </div>
+  </div>
+  <p style="text-align:center; margin-top:40px; font-family:'Space Mono',monospace; font-size:10px; color:var(--white-dim); letter-spacing:1.5px;">All prices in USD · Payment via bank transfer or PayPal · Pakistani clients: PKR pricing available</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="gold-orb" style="top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+  <div class="section-tag" style="justify-content:center;margin-bottom:24px;">Ready to Automate?</div>
+  <h2>Let's Build Your<br><em>Automation System</em></h2>
+  <p>Book a free 30-minute strategy call. I'll map out exactly what can be automated in your real estate business and show you the ROI before we start.</p>
+  <div class="contact-info-bar">
+    <a class="contact-info-item" href="mailto:hassanriazautomaton@gmail.com">
+      <span class="contact-info-icon">✉️</span>
+      <div>
+        <span class="contact-info-label">Email</span>
+        hassanriazautomaton@gmail.com
+      </div>
+    </a>
+    <a class="contact-info-item" href="tel:+923296816125">
+      <span class="contact-info-icon">📞</span>
+      <div>
+        <span class="contact-info-label">Phone / WhatsApp</span>
+        +92 329 6816125
+      </div>
+    </a>
+    <a class="contact-info-item" href="https://wa.me/923296816125?text=Hi%20Hassan!%20I%20visited%20your%20portfolio%20and%20I'm%20interested%20in%20automation%20for%20my%20real%20estate%20business." target="_blank">
+      <span class="contact-info-icon">💬</span>
+      <div>
+        <span class="contact-info-label">WhatsApp</span>
+        Chat Directly →
+      </div>
+    </a>
+  </div>
+
+  <div class="contact-form reveal" style="text-align:left;">
+    <div class="form-name-phone-grid">
+      <div class="form-group">
+        <label class="form-label">Your Name</label>
+        <input class="form-input" type="text" placeholder="Ahmad Ali">
+      </div>
+      <div class="form-group">
+        <label class="form-label">WhatsApp / Phone</label>
+        <input class="form-input" type="text" placeholder="+92 300 0000000">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+      <input class="form-input" type="email" placeholder="you@company.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Business Type</label>
+      <select class="form-select">
+        <option>Real Estate Agency</option>
+        <option>Property Developer</option>
+        <option>Real Estate Broker</option>
+        <option>Property Management</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">What do you want to automate?</label>
+      <textarea class="form-textarea" placeholder="Tell me about your current workflow challenges..."></textarea>
+    </div>
+    <button class="btn-primary" style="width:100%;padding:20px;font-size:12px;" onclick="sendToWhatsApp()">
+      <span>Send Message via WhatsApp →</span>
+    </button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Hassan<span style="color:var(--white-dim);">Riaz</span></div>
+  <ul class="footer-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="mailto:hassanriazautomaton@gmail.com">✉️ hassanriazautomaton@gmail.com</a></li>
+    <li><a href="https://wa.me/923296816125" target="_blank">💬 WhatsApp</a></li>
+  </ul>
+  <div class="footer-copy">© 2025 Hassan Riaz · All Rights Reserved</div>
+</footer>
+
+<script>
+  // Hamburger Menu
+  function toggleMenu() {
+    const nav = document.getElementById('navLinks');
+    const btn = document.getElementById('hamburger');
+    nav.classList.toggle('open');
+    btn.classList.toggle('open');
+    document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : '';
+  }
+  function closeMenu() {
+    const nav = document.getElementById('navLinks');
+    const btn = document.getElementById('hamburger');
+    nav.classList.remove('open');
+    btn.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  // WhatsApp Form Submit
+  function sendToWhatsApp() {
+    const inputs = document.querySelectorAll('.form-input, .form-select, .form-textarea');
+    const name = inputs[0]?.value || '';
+    const phone = inputs[1]?.value || '';
+    const email = inputs[2]?.value || '';
+    const biz = inputs[3]?.value || '';
+    const msg = inputs[4]?.value || '';
+    const text = `Hi Hassan! I visited your portfolio.%0A%0A*Name:* ${encodeURIComponent(name)}%0A*Phone:* ${encodeURIComponent(phone)}%0A*Email:* ${encodeURIComponent(email)}%0A*Business:* ${encodeURIComponent(biz)}%0A*Message:* ${encodeURIComponent(msg)}`;
+    window.open(`https://wa.me/923296816125?text=${text}`, '_blank');
+  }
+
+  // Custom Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+    cursor.style.left = mx - 4 + 'px';
+    cursor.style.top = my - 4 + 'px';
+  });
+
+  (function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx - 16 + 'px';
+    ring.style.top = ry - 16 + 'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  document.querySelectorAll('a, button, .tool-card, .service-card, .client-card, .pricing-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'scale(2.5)';
+      ring.style.transform = 'scale(1.5)';
+      ring.style.borderColor = 'rgba(201,168,76,0.8)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'scale(1)';
+      ring.style.transform = 'scale(1)';
+      ring.style.borderColor = 'rgba(201,168,76,0.5)';
+    });
+  });
+
+  // Scroll Reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 100);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(r => obs.observe(r));
+
+  // Nav scroll effect
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 80) {
+      nav.style.background = 'rgba(8,8,8,0.97)';
+      nav.style.backdropFilter = 'blur(20px)';
+    } else {
+      nav.style.background = 'linear-gradient(to bottom, rgba(8,8,8,0.95), transparent)';
+    }
+  });
+
+  // Counter animation
+  function animateCounter(el, target, suffix = '') {
+    let count = 0;
+    const step = target / 60;
+    const timer = setInterval(() => {
+      count = Math.min(count + step, target);
+      el.textContent = Math.floor(count) + suffix;
+      if (count >= target) clearInterval(timer);
+    }, 30);
+  }
+
+  const statsObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const nums = e.target.querySelectorAll('.stat-num');
+        nums[0] && animateCounter(nums[0], 50, '+');
+        nums[1] && animateCounter(nums[1], 30, '+');
+        statsObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  const statsEl = document.querySelector('.hero-stats');
+  if (statsEl) statsObs.observe(statsEl);
+</script>
+</body>
+</html>
